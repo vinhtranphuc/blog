@@ -1,0 +1,260 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranphucvinh.mapper.HomeMapper">
+	
+	<resultMap id="authentication" type="com.tranphucvinh.entities.Authentication">
+		<result property="userId" column="USER_ID" />
+		<result property="account" column="ACCOUNT" />
+		<result property="password" column="PASSWORD" />
+	</resultMap>
+	
+	<!-- start Category -->
+	<resultMap id="category" type="com.tranphucvinh.entities.Category">
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="category" column="CATEGORY" />
+		<result property="type" column="TYPE" />
+		<result property="numberOfPosts" column="NUMBER_OF_POSTS" />
+	</resultMap>
+	
+	<select id="getCategoryById" parameterType="String" resultMap="category">
+		SELECT
+				C.CATEGORY_ID,
+			   	CATEGORY,
+			   	TYPE,
+			   	COUNT(PC.POST_ID) AS NUMBER_OF_POSTS
+		FROM	CATEGORIES C LEFT JOIN POSTS_CATEGORIES PC
+				ON C.CATEGORY_ID = PC.CATEGORY_ID
+				WHERE C.CATEGORY_ID = #{categoryId}
+	</select>
+	
+	<select id="getCategoriesByPostId" parameterType="String" resultMap="category">
+		SELECT
+				C.CATEGORY_ID,
+				CATEGORY,
+				TYPE
+		FROM
+				CATEGORIES C JOIN POSTS_CATEGORIES PC
+				ON PC.CATEGORY_ID = C.CATEGORY_ID
+				JOIN POSTS P
+					ON P.POST_ID = PC.POST_ID
+				WHERE P.POST_ID = #{postId}
+	</select>
+
+	<select id="getCategoriesByType" parameterType="int" resultMap="category">
+		SELECT CATEGORY_ID,
+			   CATEGORY,
+			   TYPE
+		FROM CATEGORIES
+		WHERE TYPE = #{type}
+	</select>
+	
+	<select id="getCategories" resultMap="category">
+		SELECT
+			C.CATEGORY_ID,
+			CATEGORY,
+			TYPE,
+			COUNT(PC.POST_ID) AS NUMBER_OF_POSTS
+		FROM CATEGORIES C LEFT JOIN POSTS_CATEGORIES PC
+			ON C.CATEGORY_ID = PC.CATEGORY_ID
+			GROUP BY C.CATEGORY_ID
+	</select>
+	<!-- end Category -->
+	
+	<!-- start PostInfo-->
+	<resultMap id="postInfo" type="com.tranphucvinh.entities.PostInfo">
+		<result property="categoies" column="CATEGOIES" />
+		<result property="categoryType" column="TYPE" />
+		<result property="publishedAt" column="PUBLISHED_AT" />
+		<result property="title" column="TITLE" />
+		<result property="summary" column="SUMMARY" />
+		<result property="postId" column="POST_ID" />
+		<result property="numberOfComments" column="NUMBER_OF_COMMENTS" />
+	</resultMap>
+	
+	<select id="getCodePostInfoByLevel" parameterType="Map" resultMap="postInfo">
+		SELECT	
+				GROUP_CONCAT(DISTINCT CATEGORY SEPARATOR ',') AS CATEGORIES,
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				TITLE,
+				CONCAT(SUBSTRING(CONTENT, 1, 100), ' ...') AS SUMMARY,
+				P.POST_ID,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = P.POST_ID) AS NUMBER_OF_COMMENTS
+		FROM
+				POSTS P JOIN POSTS_CATEGORIES PC
+				ON
+					P.POST_ID = PC.POST_ID
+				JOIN CATEGORIES C
+					ON PC.CATEGORY_ID = C.CATEGORY_ID 
+				WHERE
+					IMPORTANT_LEVEL = #{level}
+					AND C.TYPE = 1
+				GROUP BY P.POST_ID
+				ORDER BY PUBLISHED_AT DESC
+				LIMIT ${limit}
+	</select>
+
+	<select id="getOtherPosts" resultMap="postInfo">
+		SELECT	
+				GROUP_CONCAT(DISTINCT CATEGORY SEPARATOR ',') AS CATEGORIES,
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				TITLE,
+				CONCAT(SUBSTRING(CONTENT, 1, 100), ' ...') AS SUMMARY,
+				P.POST_ID,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = P.POST_ID) AS NUMBER_OF_COMMENTS
+		FROM
+				POSTS P JOIN POSTS_CATEGORIES PC
+					ON
+					P.POST_ID = PC.POST_ID
+					JOIN CATEGORIES C
+						ON PC.CATEGORY_ID = C.CATEGORY_ID
+				WHERE
+				C.TYPE = 2
+				GROUP BY P.POST_ID
+				ORDER BY PUBLISHED_AT DESC
+	</select>
+
+	<select id="getLatestPosts" resultMap="postInfo">
+		SELECT	
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				TITLE,
+				POST_ID,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = POST_ID) AS NUMBER_OF_COMMENTS
+		FROM
+				POSTS
+				ORDER BY PUBLISHED_AT DESC
+				LIMIT 3
+	</select>
+	
+	<select id="getPostsByCategoryId" parameterType="Map" resultMap="postInfo">
+		SELECT
+				GROUP_CONCAT(DISTINCT CATEGORY SEPARATOR ',') AS CATEGORIES,
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				TITLE,
+				CONCAT(SUBSTRING(CONTENT, 1, 100), ' ...') AS SUMMARY,
+				P.POST_ID,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = P.POST_ID) AS NUMBER_OF_COMMENTS
+		FROM
+				POSTS P JOIN POSTS_CATEGORIES PC
+				ON
+					P.POST_ID = PC.POST_ID
+				JOIN CATEGORIES C
+					ON PC.CATEGORY_ID = C.CATEGORY_ID 
+				WHERE
+					C.CATEGORY_ID = #{categoryId}
+				GROUP BY P.POST_ID
+				ORDER BY PUBLISHED_AT DESC
+				LIMIT ${limit}
+	</select>
+
+	<select id="getRelatedPostsByPostId" parameterType="Map" resultMap="postInfo">
+		SELECT
+				GROUP_CONCAT(DISTINCT CATEGORY SEPARATOR ',') AS CATEGORIES,
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				TITLE,
+				CONCAT(SUBSTRING(CONTENT, 1, 100), ' ...') AS SUMMARY,
+				P.POST_ID,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = P.POST_ID) AS NUMBER_OF_COMMENTS
+		FROM POSTS P JOIN POSTS_CATEGORIES PC
+				ON P.POST_ID = PC.POST_ID
+				JOIN CATEGORIES C ON PC.CATEGORY_ID = C.CATEGORY_ID
+		WHERE C.CATEGORY_ID IN (SELECT C.CATEGORY_ID FROM CATEGORIES C JOIN POSTS_CATEGORIES PC ON C.CATEGORY_ID = PC.CATEGORY_ID AND PC.POST_ID = #{postId})
+				GROUP BY P.POST_ID
+				ORDER BY PUBLISHED_AT DESC
+				LIMIT ${limit}
+	</select>
+	<!-- end PostInfo-->
+	
+	<!-- start PostDetail-->
+	<resultMap id="postDetail" type="com.tranphucvinh.entities.PostDetail">
+		<result property="postId" column="POST_ID" />
+		<result property="title" column="TITLE" />
+		<result property="numberOfComments" column="NUMBER_OF_COMMENTS" />
+		<result property="publishedAt" column="PUBLISHED_AT" />
+		<result property="content" column="CONTENT" />
+	</resultMap>
+	
+	<select id="getPostDetailById" parameterType="String" resultMap="postDetail">
+		SELECT
+				P.POST_ID,
+				TITLE,
+				(SELECT COUNT(*) FROM COMMENTS WHERE COMMENTS.POST_ID = P.POST_ID) AS NUMBER_OF_COMMENTS,
+				DATE_FORMAT(PUBLISHED_AT,'%M %d, %Y') AS PUBLISHED_AT,
+				P.CONTENT
+		FROM
+				POSTS P
+				WHERE P.POST_ID = #{postId}
+	</select>
+	<!-- end PostDetail-->
+
+	<!-- start PostImage-->
+	<resultMap id="postImage" type="com.tranphucvinh.entities.PostImage">
+		<result property="imageId" column="IMAGE_ID" />
+		<result property="postId" column="POST_ID" />
+		<result property="imageName" column="IMAGE_NAME" />
+	</resultMap>
+
+	<select id="getPostImagesByPostId" parameterType="String" resultMap="postImage">
+		SELECT IMAGE_ID,
+			   POST_ID,
+			   IMAGE_NAME
+		FROM POSTS_IMAGES
+		WHERE POST_ID = #{postId}
+	</select>
+	<!-- start PostImages-->
+	
+	<!-- start Comment -->
+	<resultMap id="comment" type="com.tranphucvinh.entities.Comment">
+		<result property="commentId" column="NUMBER_OF_COMMENTS" />
+		<result property="commentId" column="COMMENT_ID" />
+		<result property="userFullName" column="FULL_NAME" />
+		<result property="userAvatarPath" column="AVATAR_PATH" />
+		<result property="cmtParrentId" column="COMMENT_PARENT_ID" />
+		<result property="postId" column="POST_ID" />
+		<result property="commentedAt" column="COMMENTED_AT" />
+		<result property="content" column="CONTENT" />
+	</resultMap>
+
+	<select id="getCommentsByPostId" parameterType="String" resultMap="comment">
+		SELECT
+			COMMENT_ID,
+			FULL_NAME,
+			AVATAR_PATH,
+			COMMENT_PARENT_ID,
+			C.POST_ID,
+			COMMENTED_AT,
+			C.CONTENT
+		FROM
+			COMMENTS C JOIN POSTS P
+			ON C.POST_ID = P.POST_ID
+			JOIN USERS U ON U.USER_ID = C.USER_ID
+			WHERE P.POST_ID = #{postId}
+			AND COMMENT_PARENT_ID = 0
+			ORDER BY COMMENTED_AT DESC
+	</select>
+
+	<select id="getChildCommentsByCmtId" parameterType="String" resultMap="comment">
+		SELECT
+			COMMENT_ID,
+			FULL_NAME,
+			AVATAR_PATH,
+			COMMENT_PARENT_ID,
+			C.POST_ID,
+			COMMENTED_AT,
+			C.CONTENT
+		FROM
+			COMMENTS C JOIN POSTS P
+			ON C.POST_ID = P.POST_ID
+			JOIN USERS U ON U.USER_ID = C.USER_ID
+			WHERE COMMENT_PARENT_ID = #{commentId}
+	</select>
+	
+	<select id="getNumberOfCommentsByPost" parameterType="String" resultType="int">
+		SELECT
+			COUNT(COMMENT_ID) AS NUMBER_OF_COMMENTS
+		FROM
+			COMMENTS C JOIN POSTS P
+			ON C.POST_ID = P.POST_ID
+			WHERE P.POST_ID = #{commentId}
+	</select>
+	<!-- end Comment -->
+</mapper>

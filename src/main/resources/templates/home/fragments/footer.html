@@ -1,0 +1,94 @@
+<footer class="site-footer">
+	<div class="container">
+		<div class="row mb-5">
+			<div class="col-md-4">
+				<h3>Paragraph</h3>
+				<p>
+					<img th:src="@{/home/images/img_1.jpg}" alt="Image placeholder"
+						class="img-fluid">
+				</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+					Nisi, accusantium optio unde perferendis eum illum voluptatibus
+					dolore tempora, consequatur minus asperiores temporibus
+					reprehenderit.</p>
+			</div>
+			<div class="col-md-6 ml-auto">
+				<div class="row">
+					<div class="col-md-7">
+						<h3>Latest Post</h3>
+						<div class="post-entry-sidebar">
+							<ul>
+								<li th:each="post: ${latestPosts}"><a th:href="@{'/home/post?postId='+${post.postId}}"> <img
+										th:if="${post.postImages.size() >= 1}"
+										th:src="@{${post.postImages[0].imageFullPath}}"
+										alt="Image placeholder" class="mr-4"> <img
+										th:unless="${post.postImages.size() >= 1}"
+										th:src="@{/home/images/NOT_EXISTS.jpg}" alt="Image placeholder"
+										class="mr-4">
+										<div class="text">
+											<h4 th:text="${post.title}">There’s a Cool New Way for
+												Men to Wear Socks and Sandals</h4>
+											<div class="post-meta">
+												<span class="mr-2" th:text="${post.publishedAt}">March
+													15, 2018 </span> &bullet; <span class="ml-2">
+													[[${post.numberOfComments}]] <span class="fa fa-comments"></span>
+												</span>
+											</div>
+										</div>
+								</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-1"></div>
+					<div class="col-md-4">
+						<div class="mb-5">
+							<h3>Quick Links</h3>
+							<ul class="list-unstyled">
+								<li><a href="#">About Us</a></li>
+								<li><a href="#">Travel</a></li>
+								<li><a href="#">Adventure</a></li>
+								<li><a href="#">Courses</a></li>
+								<li><a href="#">Categories</a></li>
+							</ul>
+						</div>
+						<div class="mb-5">
+							<h3>Social</h3>
+							<ul class="list-unstyled footer-social">
+								<li><a href="#"><span class="fa fa-twitter"></span>
+										Twitter</a></li>
+								<li><a href="#"><span class="fa fa-facebook"></span>
+										Facebook</a></li>
+								<li><a href="#"><span class="fa fa-instagram"></span>
+										Instagram</a></li>
+								<li><a href="#"><span class="fa fa-vimeo"></span> Vimeo</a></li>
+								<li><a href="#"><span class="fa fa-youtube-play"></span>
+										Youtube</a></li>
+								<li><a href="#"><span class="fa fa-snapchat"></span>
+										Snapshot</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				Copyright &copy;
+				<script>
+					document.write(new Date().getFullYear());
+				</script>
+				All rights reserved | Design by <a
+					href="https://www.facebook.com/vinh.tranphuc.75" target="_blank">Tran
+					Phuc Vinh</a>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/home/js/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/home/js/jquery-migrate-3.0.0.js}"></script>
+	<script th:src="@{/home/js/popper.min.js}"></script>
+	<script th:src="@{/home/js/bootstrap.min.js}"></script>
+	<script th:src="@{/home/js/owl.carousel.min.js}"></script>
+	<script th:src="@{/home/js/jquery.waypoints.min.js}"></script>
+	<script th:src="@{/home/js/jquery.stellar.min.js}"></script>
+	<script th:src="@{/home/js/main.js}"></script>
+</footer>

@@ -1,0 +1,57 @@
+<div class="sidebar-box" th:fragment="admin">
+	<div class="bio text-center">
+		<img th:src="@{/home/images/person/ADMIN.jpg}" alt="Image Placeholder"
+			class="img-fluid">
+		<div class="bio-body">
+			<h2>Tran Phuc Vinh</h2>
+			<p>Im Java developer</p>
+			<p>
+				<a href="#" class="btn btn-primary btn-sm">Read my bio</a>
+			</p>
+			<p class="social">
+				<a href="#" class="p-2"><span class="fa fa-facebook"></span></a> <a
+					href="#" class="p-2"><span class="fa fa-twitter"></span></a> <a
+					href="#" class="p-2"><span class="fa fa-instagram"></span></a> <a
+					href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+			</p>
+		</div>
+	</div>
+</div>
+<div class="sidebar-box" th:fragment="popular-posts">
+	<h3 class="heading">Popular Posts</h3>
+	<div class="post-entry-sidebar">
+		<ul>
+			<li th:each="post: ${popularPosts}"><a th:href="@{'/home/post?postId='+${post.postId}}"> <img
+					th:if="${post.postImages.size() >= 1}"
+					th:src="@{${post.postImages[0].imageFullPath}}"
+					alt="Image placeholder" class="mr-4"> <img
+					th:unless="${post.postImages.size() >= 1}"
+					th:src="@{/home/images/NOT_EXISTS.jpg}" alt="Image placeholder"
+					class="mr-4">
+					<div class="text">
+						<h4 th:text="${post.title}">There’s a Cool New Way for Men to
+							Wear Socks and Sandals</h4>
+						<div class="post-meta">
+							<span class="mr-2" th:text="${post.publishedAt}">March 15,
+								2018 </span> &bullet; <span class="ml-2">
+								[[${post.numberOfComments}]] <span class="fa fa-comments"></span>
+							</span>
+						</div>
+					</div>
+			</a></li>
+		</ul>
+	</div>
+</div>
+<div class="sidebar-box" th:fragment="categories">
+	<h3 class="heading">Categories</h3>
+	<ul class="categories">
+		<li th:each="category: ${categories}"><a th:href="@{/home/category/}+${category.categoryId}">[[${category.category}]]<span
+				th:text="'('+${category.numberOfPosts}+')'">(12)</span></a></li>
+	</ul>
+</div>
+<div class="sidebar-box" th:fragment="tags">
+	<h3 class="heading">Tags</h3>
+	<ul class="tags">
+		<li th:each="category: ${categories}"><a th:href="@{/home/category/}+${category.categoryId}">[[${category.category}]]</a></li>
+	</ul>
+</div>

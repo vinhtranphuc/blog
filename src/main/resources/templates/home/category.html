@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{home/layouts/layout}">
+<div layout:fragment="content">
+	<section class="site-section">
+		<div class="container">
+			<div class="row mb-4" id = "category-title">
+				<div class="col-md-6">
+					<h2 class="mb-4 area-title">Category: [[${category.category}]]</h2>
+				</div>
+			</div>
+			<div class="row blog-entries">
+				<div class="col-md-12 col-lg-8 main-content">
+					<div class="row mb-5 mt-5">
+						<div class="col-md-12">
+							<div class="post-entry-horzontal" th:each="post: ${categoryPosts}">
+								<a href="#">
+									<div class="image element-animate" data-animate-effect="fadeIn"
+										th:if="${post.postImages.size() >= 1}"
+										th:style="'background-image: url('+@{${post.postImages[0].imageFullPath}}+');'"></div>
+									<div class="image element-animate" data-animate-effect="fadeIn"
+										th:unless="${post.postImages.size() >= 1}"
+										th:style="'background-image: url('+@{/home/images/NOT_EXISTS.jpg}+');'"></div>
+									<span class="text">
+										<div class="post-meta">
+											<span class="category" th:text="${post.categories}">Travel</span> <span class="mr-2" th:text="${post.publishedAt}">March
+												15, 2018 </span> &bullet; <span class="ml-2">
+												[[${post.numberOfComments}]]
+												<span class="fa fa-comments"></span></span>
+										</div>
+										<h2 th:text="${post.title}">There’s a Cool New Way for Men to Wear Socks and
+											Sandals</h2>
+								</span>
+								</a>
+							</div>
+							<!-- END post -->
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 text-center" th:if="${categoryPosts.totalPages > 0}">
+							<nav aria-label="Page navigation" class="text-center">
+								<ul class="pagination" >
+									<li class="page-item" th:if="${categoryPosts.hasPrevious()}"><a class="page-link" th:href="@{/home/category/}+${category.categoryId}+'?page='+${categoryPosts.number}">Prev</a></li>
+									<li th:each="pageNumber : ${pageNumbers}" th:class="${pageNumber==categoryPosts.number + 1} ? 'page-item active'"><a class="page-link" th:href="@{/home/category/}+${category.categoryId}+'?page='+${pageNumber}" th:text=${pageNumber}></a></li>
+									<li class="page-item" th:if="${categoryPosts.hasNext()}"><a class="page-link" th:href="@{/home/category/}+${category.categoryId}+'?page='+${categoryPosts.number+2}">Next</a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+
+				<!-- END main-content -->
+
+				<div class="col-md-12 col-lg-4 sidebar">
+					<div class="sidebar-box search-form-wrap">
+						<form action="#" class="search-form">
+							<div class="form-group">
+								<span class="icon fa fa-search"></span> <input type="text"
+									class="form-control" id="s"
+									placeholder="Type a keyword and hit enter">
+							</div>
+						</form>
+					</div>
+					<!-- END sidebar-box -->
+					<div th:replace="home/fragments/sidebar-boxes :: admin"></div>
+					<!-- END sidebar-box -->
+					<div th:replace="home/fragments/sidebar-boxes :: popular-posts">
+					</div>
+					<!-- END sidebar-box -->
+					<div th:replace="home/fragments/sidebar-boxes :: categories">
+					</div>
+					<!-- END sidebar-box -->
+					<div th:replace="home/fragments/sidebar-boxes :: tags"></div>
+					<!-- END sidebar-box -->
+				</div>
+				<!-- END sidebar -->
+			</div>
+		</div>
+	</section>
+</div>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"xmlns:th="http://www.thymeleaf.org" layout:decorate="~{home/layouts/layout}">
+	<div layout:fragment="content">
+		<section class="site-section pt-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="owl-carousel owl-theme home-slider">
+							<div th:if="${topPosts.size() >= 1}" th:each="image: ${topPosts[0].postImages}">
+								<a th:href="@{'/home/post?postId='+${topPosts[0].postId}}"
+									class="a-block d-flex align-items-center height-lg"
+									th:style="'background-image: url('+@{${image.imageFullPath}}+');'">
+									<div class="text half-to-full">
+										<div class="post-meta">
+											<span class="category" th:text="${topPosts[0].categories}"></span> <span class="mr-2" th:text="${topPosts[0].publishedAt}"></span> &bullet; <span class="ml-2">
+											 [[${topPosts[0].numberOfComments}]]
+											<span class="fa fa-comments"></span></span>
+										</div>
+										<h3 th:text="${topPosts[0].title}"></h3>
+										<p class="p-summary" th:text="${topPosts[0].summary}"></p>
+									</div>
+								</a>
+							</div>
+							<div th:unless="${topPosts.size() >= 1}">
+								<a href="#"
+									class="a-block d-flex align-items-center height-md"
+									th:unless="${topPosts.size() >= 1}"
+									th:style="'background-image: url('+@{home/images/NOT_EXISTS.jpg}+');'"
+								>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 col-lg-4">
+						<a th:href="@{'/home/post?postId='+${topPosts[1].postId}}"
+							class="a-block d-flex align-items-center height-md"
+							th:if="${topPosts.size() >= 2}"
+							th:style="'background-image: url('+@{${topPosts[1].postImages[0].imageFullPath}}+');'">
+							<div class="text">
+								<div class="post-meta">
+									<span class="category" th:text="${topPosts[1].categories}">Category</span> <span class="mr-2" th:text="${topPosts[1].publishedAt}"></span> &bullet; <span class="ml-2">
+									[[${topPosts[1].numberOfComments}]]
+									<span class="fa fa-comments"></span></span>
+								</div>
+								<h3 th:text="${topPosts[1].title}"></h3>
+							</div>
+						</a>
+						<a href="#"
+							class="a-block d-flex align-items-center height-md"
+							th:unless="${topPosts.size() >= 2}"
+							th:style="'background-image: url('+@{home/images/NOT_EXISTS.jpg}+');'"
+							>
+						</a>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<a th:href="@{'/home/post?postId='+${topPosts[2].postId}}"
+							class="a-block d-flex align-items-center height-md"
+							th:if="${topPosts.size() >= 3}"
+							th:style="'background-image: url('+@{${topPosts[2].postImages[0].imageFullPath}}+');'">
+							<div class="text">
+								<div class="post-meta">
+									<span class="category" th:text="${topPosts[2].categories}">Category</span> <span class="mr-2" th:text="${topPosts[2].publishedAt}"></span> &bullet; <span class="ml-2">
+									[[${topPosts[2].numberOfComments}]]
+									<span class="fa fa-comments"></span></span>
+								</div>
+								<h3 th:text="${topPosts[2].title}"></h3>
+							</div>
+						</a>
+						<a href="#"
+							class="a-block d-flex align-items-center height-md"
+							th:unless="${topPosts.size() >= 3}"
+							th:style="'background-image: url('+@{home/images/NOT_EXISTS.jpg}+');'"
+							>
+						</a>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<a th:href="@{'/home/post?postId='+${topPosts[3].postId}}"
+							class="a-block d-flex align-items-center height-md"
+							th:if="${topPosts.size() >= 4}"
+							th:style="'background-image: url('+@{${topPosts[3].postImages[0].imageFullPath}}+');'">
+							<div class="text">
+								<div class="post-meta">
+									<span class="category" th:text="${topPosts[3].categories}">Category</span> <span class="mr-2" th:text="${topPosts[3].publishedAt}"></span> &bullet; <span class="ml-2">
+									[[${topPosts[3].numberOfComments}]]
+									<span class="fa fa-comments"></span></span>
+								</div>
+								<h3 th:text="${topPosts[3].title}"></h3>
+							</div>
+						</a>
+						<a href="#"
+							class="a-block d-flex align-items-center height-md"
+							th:unless="${topPosts.size() >= 4}"
+							th:style="'background-image: url('+@{home/images/NOT_EXISTS.jpg}+');'"
+							>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- END section -->
+		<section class="site-section py-sm">
+			<div class="container" id="code-posts">
+				<div class="row">
+					<div class="col-md-6">
+						<h2 class="mb-4 content-title">code share</h2>
+					</div>
+				</div>
+				<div class="row blog-entries">
+					<div class="col-md-12 col-lg-8 main-content">
+						<div class="row">
+							<div class="col-md-6" th:each="post: ${codePosts}">
+								<a th:href="@{'/home/post?postId='+${post.postId}}" class="blog-entry element-animate"
+									data-animate-effect="fadeIn">
+									<img
+									th:if="${post.postImages.size() >= 1}"
+									th:src="@{${post.postImages[0].imageFullPath}}" alt="Image placeholder">
+									<img
+									th:unless="${post.postImages.size() >= 1}"
+									th:src="@{/home/images/NOT_EXISTS.jpg}" alt="Image placeholder">
+									<div class="blog-content-body">
+										<div class="post-meta">
+											<span class="category" th:text="${post.categories}">Food</span> <span class="mr-2" th:text="${post.publishedAt}">
+											March 15, 2018 </span> &bullet; <span class="ml-2">
+											[[${post.numberOfComments}]]
+											<span class="fa fa-comments"></span>
+											</span>
+										</div>
+										<h2 th:text="${post.title}"></h2>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-center" th:if="${codePosts.totalPages > 0}">
+								<nav aria-label="Page navigation" class="text-center">
+									<ul class="pagination" >
+										<li class="page-item" th:if="${codePosts.hasPrevious()}"><a class="page-link" th:href="@{/home/code-posts(page=${codePosts.number})}">Prev</a></li>
+										<li th:each="pageNumber : ${codePageNumbers}" th:class="${pageNumber==codePosts.number + 1} ? 'page-item active'"><a class="page-link" th:href="@{/home/code-posts(page=${pageNumber})}" th:text=${pageNumber}></a></li>
+										<li class="page-item" th:if="${codePosts.hasNext()}"><a class="page-link" th:href="@{/home/code-posts(page=${codePosts.number+2})}">Next</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+						<div class="row mb-5 mt-5" id="more-posts">
+							<div class="col-md-12">
+								<h2 class="mb-4 content-title">more ...</h2>
+							</div>
+							<div class="col-md-12">
+								<div class="post-entry-horzontal" th:each="post: ${morePosts}">
+									<a th:href="@{'/home/post?postId='+${post.postId}}">
+										<div class="image element-animate"
+											data-animate-effect="fadeIn"
+											th:if="${post.postImages.size() >= 1}"
+											th:style="'background-image: url('+@{${post.postImages[0].imageFullPath}}+');'"></div>
+										<div class="image element-animate"
+											data-animate-effect="fadeIn"
+											th:unless="${post.postImages.size() >= 1}"
+											th:style="'background-image: url('+@{/home/images/NOT_EXISTS.jpg}+');'"></div>
+										<span class="text">
+											<div class="post-meta">
+												<span class="category" th:text="${post.categories}">Travel</span> <span class="mr-2" th:text="${post.publishedAt}">March
+													15, 2018 </span> &bullet; <span class="ml-2">
+													[[${post.numberOfComments}]]
+													<span class="fa fa-comments"></span></span>
+											</div>
+											<h2 th:text="${post.title}"></h2>
+									</span>
+									</a>
+								</div>
+							</div>
+							<div class="col-md-12 text-center" th:if="${morePosts.totalPages > 0}">
+								<nav aria-label="Page navigation" class="text-center">
+									<ul class="pagination" >
+										<li class="page-item" th:if="${morePosts.hasPrevious()}"><a class="page-link" th:href="@{/home/more-posts(page=${morePosts.number})}">Prev</a></li>
+										<li th:each="pageNumber : ${morePageNumbers}" th:class="${pageNumber==morePosts.number + 1} ? 'page-item active'"><a class="page-link" th:href="@{/home/more-posts(page=${pageNumber})}" th:text=${pageNumber}></a></li>
+										<li class="page-item" th:if="${morePosts.hasNext()}"><a class="page-link" th:href="@{/home/more-posts(page=${morePosts.number+2})}">Next</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<!-- END main-content -->
+
+					<div class="col-md-12 col-lg-4 sidebar">
+						<div class="sidebar-box search-form-wrap">
+							<form action="#" class="search-form">
+								<div class="form-group">
+									<span class="icon fa fa-search"></span> <input type="text"
+										class="form-control" id="s"
+										placeholder="Type a keyword and hit enter">
+								</div>
+							</form>
+						</div>
+						<!-- END sidebar-box -->
+						<div th:replace="home/fragments/sidebar-boxes :: admin">
+						</div>
+						<!-- END sidebar-box -->
+						<div th:replace="home/fragments/sidebar-boxes :: popular-posts">
+						</div>
+						<!-- END sidebar-box -->
+						<div th:replace="home/fragments/sidebar-boxes :: categories">
+						</div>
+						<!-- END sidebar-box -->
+						<div th:replace="home/fragments/sidebar-boxes :: tags">
+						</div>
+						<!-- END sidebar-box -->
+					</div>
+					<!-- END sidebar -->
+				</div>
+			</div>
+		</section>
+
+		<!-- loader -->
+		<div id="loader" class="show fullscreen">
+			<svg class="circular" width="48px" height="48px">
+			<circle class="path-bg" cx="24" cy="24" r="22" fill="none"
+					stroke-width="4" stroke="#eeeeee" />
+			<circle class="path" cx="24" cy="24" r="22" fill="none"
+					stroke-width="4" stroke-miterlimit="10" stroke="#f4b214" /></svg>
+		</div>
+	</div>
+</html>

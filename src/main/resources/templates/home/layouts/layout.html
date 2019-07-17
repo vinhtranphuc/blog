@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment="head">
+		<title>Tran Phuc Vinh &mdash; Code for life</title>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link
+			href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700"
+			rel="stylesheet">
+		<!-- Theme Style -->
+		<link rel="stylesheet" th:href="@{/home/css/style.css}">
+		<link rel="stylesheet" th:href="@{/home/css/bootstrap.css}">
+		<link rel="stylesheet" th:href="@{/home/css/animate.css}">
+		<link rel="stylesheet" th:href="@{/home/css/owl.carousel.min.css}">
+		<link rel="stylesheet"
+			th:href="@{/home/fonts/ionicons/css/ionicons.min.css}">
+		<link rel="stylesheet"
+			th:href="@{/home/fonts/fontawesome/css/font-awesome.min.css}">
+		<link rel="stylesheet"
+			th:href="@{/home/fonts/flaticon/font/flaticon.css}">
+	</head>
+<body>
+	<div th:replace="home/fragments/header :: header">This header is
+		going to be replaced.</div>
+	<div layout:fragment="content"></div>
+	<div th:replace="home/fragments/footer :: footer">This footer is
+		going to be replaced.</div>
+</body>
+</html>

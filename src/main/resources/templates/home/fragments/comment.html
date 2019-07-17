@@ -1,0 +1,22 @@
+<div th:fragment="comment-contain">
+	<div class="vcard">
+		<img th:src="@{${comment.userAvatarPath}}" alt="Image placeholder">
+	</div>
+	<div class="comment-body">
+		<h3 th:text="${comment.userFullName}">VinhTP</h3>
+		<div class="meta" th:text="${comment.commentedAt}"></div>
+		<p th:text="${comment.content}"></p>
+		<p>
+			<span class="fa fa-thumbs-up" id="comment-like"></span> (10) <span
+				class="fa fa-thumbs-down" id="comment-dislike"></span> (1) <span
+				class="reply" id="comment-reply">Reply</span> <span class="delete"
+				id="comment-delete">Delete</span>
+		</p>
+	</div>
+	<ul class="children"
+		th:if="${comment.childComments!=null and !comment.childComments.empty}">
+		<li class="comment" th:each="comment: ${comment.childComments}">
+			<div th:replace="home/fragments/comment :: comment-contain"></div>
+		</li>
+	</ul>
+</div>
